@@ -1,0 +1,21 @@
+{
+    "name": "anywhere/wrapper",
+    "description": "Class Wrapper and library for used with OAAS Anywhere",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "velliz",
+            "email": "diditvelliz@outlook.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "anywrapper\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.5.*"
+    }
+}
