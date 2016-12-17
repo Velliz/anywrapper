@@ -2,8 +2,8 @@
 
 Class Wrapper and library for used with OAAS Anywhere
 
-[![Latest Stable Version](https://poser.pugx.org/anywhere/wrapper/v/stable)](https://packagist.org/packages/puko/framework)
-[![Total Downloads](https://poser.pugx.org/anywhere/wrapper/downloads)](https://packagist.org/packages/puko/framework)
+[![Latest Stable Version](https://poser.pugx.org/anywhere/wrapper/v/stable)](https://packagist.org/packages/anywhere/wrapper)
+[![Total Downloads](https://poser.pugx.org/anywhere/wrapper/downloads)](https://packagist.org/packages/anywhere/wrapper)
 
 ## PDF requests sample
 ```
