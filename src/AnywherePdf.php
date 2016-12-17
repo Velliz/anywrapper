@@ -51,6 +51,7 @@ class AnywherePdf extends Wrapper
 
     /**
      * @param $apiUrl
+     * @return mixed|void
      */
     public function Send($apiUrl)
     {
