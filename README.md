@@ -2,6 +2,9 @@
 
 Class Wrapper and library for used with OAAS Anywhere
 
+[![Latest Stable Version](https://poser.pugx.org/anywhere/wrapper/v/stable)](https://packagist.org/packages/puko/framework)
+[![Total Downloads](https://poser.pugx.org/anywhere/wrapper/downloads)](https://packagist.org/packages/puko/framework)
+
 ## PDF requests sample
 ```
 require 'AnywhereWrapper.php';
