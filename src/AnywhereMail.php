@@ -129,7 +129,9 @@ class AnywhereMail extends Wrapper
     public function Send($apiUrl)
     {
         $this->apiUrl = $apiUrl;
-        $this->jsonData['attachment'] = $this->attachmentData;
+        if(count($this->attachmentData) > 0) {
+            $this->jsonData['attachment'] = $this->attachmentData;
+        }
         $post['jsondata'] = json_encode($this->jsonData);
 
         if ($this->requestType == Wrapper::POST) {
