@@ -25,9 +25,29 @@ class AnywhereImage extends Wrapper
         $this->mode = Wrapper::IMAGES;
     }
 
-    //TODO: Image Wrapper
     public function Send($apiUrl)
     {
+        $this->apiUrl = $apiUrl;
+        if(count($this->attachmentData) > 0) {
+            $this->jsonData['attachment'] = $this->attachmentData;
+        }
+        $post['jsondata'] = json_encode($this->jsonData);
 
+        if ($this->requestType == Wrapper::URL) {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
+            curl_setopt($curl, CURLOPT_POST, TRUE);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+            curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
+            $response = curl_exec($curl);
+            curl_close($curl);
+
+            header("Cache-Control: no-cache");
+            header("Pragma: no-cache");
+            header("Author: Anywhere 0.1");
+            header('Content-Type: image/png');
+
+            echo $response;
+        }
     }
 }
