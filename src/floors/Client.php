@@ -21,18 +21,34 @@ class Client
 
     public function StartSession()
     {
-        $this->token = $_GET['token'];
-        $this->app = $_GET['app'];
+
+        $this->token = isset($_GET['token']) ? $_GET['token'] : null;
+        $this->app = isset($_GET['app']) ? $_GET['app'] : null;
 
         if ($this->token != null && $this->app != null) {
             $json = $this->Login($this->app, $this->token);
-            $_SESSION[$this->app] = (array)json_decode($json);
+            $_SESSION[$this->identifier] = (array)json_decode($json);
         }
+
     }
 
     public function GetSessionData()
     {
-        return $_SESSION[$this->app];
+        return $_SESSION[$this->identifier];
+    }
+
+    public function IsLogin()
+    {
+        if (isset($_SESSION[$this->identifier])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function Logout()
+    {
+        unset($_SESSION[$this->identifier]);
     }
 
     private function Login($a, $t)
