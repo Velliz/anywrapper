@@ -6,25 +6,53 @@
  *
  * Copyright (c) 2016, Didit Velliz
  *
- * @package    anywrapper
- * @author    Didit Velliz
- * @link    https://github.com/velliz/pukoframework
- * @since    Version 0.0.1
+ * @package	anywrapper
+ * @author	Didit Velliz
+ * @link	https://github.com/velliz/pukoframework
+ * @since	Version 0.0.1
  *
  */
-namespace anywrapper;
+namespace wrapper\anywhere;
+
+use Exception;
 
 /**
- * Class AnywhereImage
+ * Class AnywherePdf
  * @package anywrapper
  */
-class AnywhereImage extends Wrapper
+class Pdf extends Wrapper
 {
-    protected function Init()
+
+    public function __construct($requestType, $requestUrl = null)
     {
-        $this->mode = Wrapper::IMAGES;
+        parent::__construct();
+        $this->requestType = $requestType;
+        $this->requestUrl = $requestUrl;
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @throws Exception
+     */
+    public function setValue($key, $value)
+    {
+        if ($key == null)
+            throw new Exception('Key not set.');
+        if ($value == null)
+            throw new Exception('Value not set.');
+        $this->jsonData[$key] = $value;
+    }
+
+    protected function Init()
+    {
+        $this->mode = Wrapper::PDF;
+    }
+
+    /**
+     * @param $apiUrl
+     * @return mixed|void
+     */
     public function Send($apiUrl)
     {
         $this->apiUrl = $apiUrl;
@@ -33,7 +61,7 @@ class AnywhereImage extends Wrapper
         }
         $post['jsondata'] = json_encode($this->jsonData);
 
-        if ($this->requestType == Wrapper::URL) {
+        if ($this->requestType == Wrapper::POST) {
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
             curl_setopt($curl, CURLOPT_POST, TRUE);
@@ -45,7 +73,7 @@ class AnywhereImage extends Wrapper
             header("Cache-Control: no-cache");
             header("Pragma: no-cache");
             header("Author: Anywhere 0.1");
-            header('Content-Type: image/png');
+            header('Content-Type: application/pdf');
 
             echo $response;
         }

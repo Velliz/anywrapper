@@ -12,7 +12,7 @@
  * @since    Version 0.0.1
  *
  */
-namespace anywrapper;
+namespace wrapper\anywhere;
 
 use Exception;
 
@@ -20,7 +20,7 @@ use Exception;
  * Class AnywhereMail
  * @package anywrapper
  */
-class AnywhereMail extends Wrapper
+class Mail extends Wrapper
 {
 
     public function __construct($requestType, $requestUrl = null)

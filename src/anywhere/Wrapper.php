@@ -12,7 +12,7 @@
  * @since	Version 0.0.1
  *
  */
-namespace anywrapper;
+namespace wrapper\anywhere;
 
 /**
  * Class Wrapper
