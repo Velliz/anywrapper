@@ -51,6 +51,41 @@ class Client
         unset($_SESSION[$this->identifier]);
     }
 
+    public function GetProfilePictureURL()
+    {
+
+    }
+
+    public function GetProfileURL()
+    {
+
+    }
+
+    public function IsHasPermission($permission)
+    {
+
+    }
+
+    public function GetPermission()
+    {
+
+    }
+
+    public function ConfirmPassword()
+    {
+
+    }
+
+    public function GetProfileInformation()
+    {
+
+    }
+
+    public function GetLinkedAccount()
+    {
+
+    }
+
     private function Login($a, $t)
     {
         $key = hash('sha256', $a);
