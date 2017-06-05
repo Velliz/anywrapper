@@ -5,42 +5,60 @@ namespace wrapper\floors;
 /**
  * Class Client
  * @package wrapper\floors
- *
- * TODO: clone it to anywrapper so can downloaded via composer
  */
 class Client
 {
 
-    private $identifier = null;
+    private $identifier;
+    private $server;
+
+    #region floors tokenize
     private $token = null;
     private $secure = null;
     private $app = null;
+    #end region floors tokenize
 
-    private $redirect = null;
+    private $redirect = '';
 
-    public function __construct($identifier, $redirect_url)
+    /**
+     * Client constructor.
+     *
+     * @param array $server
+     * [
+     *   'identifier' => '',
+     *   'server_url' => '',
+     * ]
+     *
+     * @param string $redirect
+     */
+    public function __construct($server, $redirect)
     {
         session_start();
-        $this->identifier = $identifier;
-        $this->redirect = $redirect_url;
+
+        $this->identifier = $server['identifier'];
+        $this->server = $server['server'];
+
+        $this->redirect = $redirect;
     }
 
-    public function StartSession()
+    public function StartSession($refresh = true)
     {
-        $this->secure = isset($_GET['secure']) ? $_GET['secure'] : null;
-        $this->token = isset($_GET['token']) ? $_GET['token'] : null;
-        $this->app = isset($_GET['app']) ? $_GET['app'] : null;
+        $this->secure = isset($_GET['secure']) ? $_GET['secure'] : $_SESSION['secure'];
+        $this->token = isset($_GET['token']) ? $_GET['token'] : $_SESSION['token'];
+        $this->app = isset($_GET['app']) ? $_GET['app'] : $_SESSION['app'];
 
         if ($this->secure != null && $this->app != null && $this->token != null) {
             $json = $this->Login($this->app, $this->secure);
 
             $_SESSION[$this->identifier] = (array)json_decode($json);
             $_SESSION['token'] = $this->token;
+            $_SESSION['secure'] = $this->secure;
+            $_SESSION['app'] = $this->app;
 
-            header('Location: ' . $this->redirect);
-            exit;
+            if ($refresh) {
+                header('Location: ' . $this->redirect);
+            }
         }
-
     }
 
     public function GetSessionData()
@@ -78,19 +96,38 @@ class Client
     public function GetProfilePictureURL($size = null)
     {
         $user = $_SESSION[$this->identifier];
-        $profile_string = "http://localhost/floors/api/avatar/%s/%s";
+        $profile_string = $this->server . "api/avatar/%s/%s";
         $size = ($size == null) ? "400" : (string)$size;
         return sprintf($profile_string, $user['id'], $size);
     }
 
-    public function GetProfileURL()
+    public function GetPublicProfileURL()
     {
 
     }
 
     public function IsHasPermission($permission)
     {
+        $guzzle = new \GuzzleHttp\Client([
+            'base_uri' => $this->server,
+            'timeout' => 2.0,
+        ]);
+        $response = $guzzle->request('POST', 'authorized', [
+            'form_params' => [
+                'token' => $this->token,
+                'sso' => $this->app,
+            ]
+        ]);
 
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body);
+
+        foreach ($data->data->auth as $val) {
+            if (strcasecmp($val->pcode, $permission) == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function GetPermission()

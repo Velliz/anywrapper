@@ -4,17 +4,14 @@
 
 include 'vendor/autoload.php';
 
-$guzzle = new \GuzzleHttp\Client([
-    'base_uri' => 'http://localhost/floors/api/',
-    'timeout' => 2.0,
-]);
-$response = $guzzle->request('POST', 'authorized', [
-    'form_params' => [
-        'token' => 'tLrLmeryfC',
-        'sso' => 'b57b22e6deed7ce29d6e08e096ea3180ad13d005'
-    ]
-]);
+#region permission checking
+$client = new \wrapper\floors\Client(array(
+    'server' => 'http://localhost/floors/api/',
+    'identifier' => 'tanampohon'
+), 'http://localhost/anywrapper');
 
-$body = $response->getBody();
-$stringBody = (string) $body;
-var_dump($stringBody);
+$client->StartSession(false);
+$permission = $client->IsHasPermission('SADMIN');
+
+var_dump($permission);
+#end region permission checking
