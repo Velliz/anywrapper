@@ -16,4 +16,5 @@ $response = $guzzle->request('POST', 'authorized', [
 ]);
 
 $body = $response->getBody();
-echo $body;
+$stringBody = (string) $body;
+var_dump($stringBody);
