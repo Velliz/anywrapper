@@ -17,18 +17,12 @@ class Client
     private $app = null;
 
     private $redirect = null;
-    private $guzzle = null;
 
     public function __construct($identifier, $redirect_url)
     {
         session_start();
         $this->identifier = $identifier;
         $this->redirect = $redirect_url;
-
-        $this->guzzle = new \GuzzleHttp\Client([
-            'base_uri' => 'http://localhost/floors/api/',
-            'timeout' => 2.0,
-        ]);
     }
 
     public function StartSession()
@@ -96,13 +90,7 @@ class Client
 
     public function IsHasPermission($permission)
     {
-        $response = $this->guzzle->request('POST', 'authorized', [
-            'form_params' => [
-                'token' => $this->token,
-                'sso' => $this->app
-            ]
-        ]);
-        var_dump($response);
+
     }
 
     public function GetPermission()
