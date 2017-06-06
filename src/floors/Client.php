@@ -135,9 +135,27 @@ class Client
 
     }
 
-    public function ConfirmPassword()
+    public function ConfirmPassword($password, $confirm)
     {
+        $guzzle = new \GuzzleHttp\Client([
+            'base_uri' => $this->server,
+            'timeout' => 2.0,
+        ]);
+        $response = $guzzle->request('POST', 'confirm/password', [
+            'form_params' => [
+                'token' => $this->token,
+                'password' => $password,
+                'confirm' => $confirm,
+            ]
+        ]);
 
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body);
+
+        if ($data->status == 'success' && isset($data->data->id)) {
+            return true;
+        }
+        return false;
     }
 
     public function GetProfileInformation()

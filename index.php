@@ -11,7 +11,7 @@ $client = new \wrapper\floors\Client(array(
 ), 'http://localhost/anywrapper');
 
 $client->StartSession(false);
-$permission = $client->IsHasPermission('SADMIN');
+$permission = $client->ConfirmPassword('asus', 'asus');
 
 var_dump($permission);
 #end region permission checking
