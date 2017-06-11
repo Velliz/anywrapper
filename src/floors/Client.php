@@ -101,11 +101,6 @@ class Client
         return sprintf($profile_string, $user['id'], $size);
     }
 
-    public function GetPublicProfileURL()
-    {
-
-    }
-
     public function IsHasPermission($permission)
     {
         $guzzle = new \GuzzleHttp\Client([
@@ -132,7 +127,19 @@ class Client
 
     public function GetPermission()
     {
+        $guzzle = new \GuzzleHttp\Client([
+            'base_uri' => $this->server,
+            'timeout' => 2.0,
+        ]);
+        $response = $guzzle->request('POST', 'confirm/password', [
+            'form_params' => [
+                'token' => $this->token,
+            ]
+        ]);
 
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body);
+        return $data;
     }
 
     public function ConfirmPassword($password, $confirm)
@@ -158,13 +165,54 @@ class Client
         return false;
     }
 
-    public function GetProfileInformation()
+    public function GetLoginInformation()
     {
+        $guzzle = new \GuzzleHttp\Client([
+            'base_uri' => $this->server,
+            'timeout' => 2.0,
+        ]);
+        $response = $guzzle->request('POST', 'login/info', [
+            'form_params' => [
+                'token' => $this->token,
+            ]
+        ]);
 
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body);
+        return $data;
     }
 
-    public function GetLinkedAccount()
+    public function GetLinkedAccountUsage()
     {
+        $guzzle = new \GuzzleHttp\Client([
+            'base_uri' => $this->server,
+            'timeout' => 2.0,
+        ]);
+        $response = $guzzle->request('POST', 'credential/info', [
+            'form_params' => [
+                'token' => $this->token,
+            ]
+        ]);
 
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body);
+        return $data;
+    }
+
+    public function GetUserData()
+    {
+        $guzzle = new \GuzzleHttp\Client([
+            'base_uri' => $this->server,
+            'timeout' => 2.0,
+        ]);
+        $response = $guzzle->request('POST', 'user', [
+            'form_params' => [
+                'token' => $this->token,
+            ]
+        ]);
+
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body);
+        return $data;
     }
 }
