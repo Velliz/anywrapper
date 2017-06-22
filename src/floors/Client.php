@@ -215,4 +215,20 @@ class Client
         $data = json_decode($body);
         return $data;
     }
+
+    public function GetSessionID()
+    {
+        return $_SESSION[$this->identifier]['id'];
+    }
+
+    public function GetSessionName()
+    {
+        return $_SESSION[$this->identifier]['name'];
+    }
+
+    public function GetSessionEmail()
+    {
+        return $_SESSION[$this->identifier]['email'];
+    }
+
 }
