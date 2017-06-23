@@ -2,6 +2,8 @@
 
 namespace wrapper\floors;
 
+use \GuzzleHttp\Client as Guzzle;
+
 /**
  * Class Client
  * @package wrapper\floors
@@ -9,8 +11,11 @@ namespace wrapper\floors;
 class Client
 {
 
+    private $guzzle;
+
     private $identifier;
     private $server;
+    private $redirect;
 
     #region floors tokenize
     private $token = null;
@@ -18,7 +23,7 @@ class Client
     private $app = null;
     #end region floors tokenize
 
-    private $redirect = '';
+
 
     /**
      * Client constructor.
@@ -37,6 +42,11 @@ class Client
 
         $this->identifier = $server['identifier'];
         $this->server = $server['server'];
+
+        $this->guzzle = new Guzzle([
+            'base_uri' => $this->server,
+            'timeout' => 2.0,
+        ]);
 
         $this->redirect = $redirect;
     }
@@ -103,11 +113,7 @@ class Client
 
     public function IsHasPermission($permission)
     {
-        $guzzle = new \GuzzleHttp\Client([
-            'base_uri' => $this->server,
-            'timeout' => 2.0,
-        ]);
-        $response = $guzzle->request('POST', 'authorized', [
+        $response = $this->guzzle->request('POST', 'authorized', [
             'form_params' => [
                 'token' => $this->token,
                 'sso' => $this->app,
@@ -127,11 +133,7 @@ class Client
 
     public function GetPermission()
     {
-        $guzzle = new \GuzzleHttp\Client([
-            'base_uri' => $this->server,
-            'timeout' => 2.0,
-        ]);
-        $response = $guzzle->request('POST', 'confirm/password', [
+        $response = $this->guzzle->request('POST', 'confirm/password', [
             'form_params' => [
                 'token' => $this->token,
             ]
@@ -144,11 +146,7 @@ class Client
 
     public function ConfirmPassword($password, $confirm)
     {
-        $guzzle = new \GuzzleHttp\Client([
-            'base_uri' => $this->server,
-            'timeout' => 2.0,
-        ]);
-        $response = $guzzle->request('POST', 'confirm/password', [
+        $response = $this->guzzle->request('POST', 'confirm/password', [
             'form_params' => [
                 'token' => $this->token,
                 'password' => $password,
@@ -167,11 +165,7 @@ class Client
 
     public function GetLoginInformation()
     {
-        $guzzle = new \GuzzleHttp\Client([
-            'base_uri' => $this->server,
-            'timeout' => 2.0,
-        ]);
-        $response = $guzzle->request('POST', 'login/info', [
+        $response = $this->guzzle->request('POST', 'login/info', [
             'form_params' => [
                 'token' => $this->token,
             ]
@@ -184,11 +178,7 @@ class Client
 
     public function GetLinkedAccountUsage()
     {
-        $guzzle = new \GuzzleHttp\Client([
-            'base_uri' => $this->server,
-            'timeout' => 2.0,
-        ]);
-        $response = $guzzle->request('POST', 'credential/info', [
+        $response = $this->guzzle->request('POST', 'credential/info', [
             'form_params' => [
                 'token' => $this->token,
             ]
@@ -201,11 +191,7 @@ class Client
 
     public function GetUserData()
     {
-        $guzzle = new \GuzzleHttp\Client([
-            'base_uri' => $this->server,
-            'timeout' => 2.0,
-        ]);
-        $response = $guzzle->request('POST', 'user', [
+        $response = $this->guzzle->request('POST', 'user', [
             'form_params' => [
                 'token' => $this->token,
             ]

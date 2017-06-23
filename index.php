@@ -16,7 +16,7 @@ $redirect = 'http://localhost/anywrapper';
 $client = new FloorsWrapper($config, $redirect);
 $client->StartSession(false);
 
-$confirm = $client->ConfirmPassword('azezil1412', 'azezil1412');
+$confirm = $client->ConfirmPassword('test', 'test');
 var_dump($confirm);
 echo '<br>';
 $permission = $client->IsHasPermission('DFUSER');
