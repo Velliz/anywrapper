@@ -1,5 +1,17 @@
 <?php
-
+/**
+ * floors client
+ *
+ * Client library for used with Floors
+ *
+ * Copyright (c) 2016, Didit Velliz
+ *
+ * @package	anywrapper
+ * @author	Didit Velliz
+ * @link	https://github.com/velliz/floors
+ * @since	Version 0.0.1
+ *
+ */
 namespace wrapper\floors;
 
 use \GuzzleHttp\Client as Guzzle;
