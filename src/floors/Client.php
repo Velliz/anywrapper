@@ -145,9 +145,10 @@ class Client
 
     public function GetPermission()
     {
-        $response = $this->guzzle->request('POST', 'confirm/password', [
+        $response = $this->guzzle->request('POST', 'authorized', [
             'form_params' => [
                 'token' => $this->token,
+                'sso' => $this->app,
             ]
         ]);
 
