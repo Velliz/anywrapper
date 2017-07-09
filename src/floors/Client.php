@@ -35,8 +35,6 @@ class Client
     private $app = null;
     #end region floors tokenize
 
-
-
     /**
      * Client constructor.
      *
@@ -61,14 +59,14 @@ class Client
         ]);
 
         $this->redirect = $redirect;
-    }
 
-    public function StartSession($refresh = true)
-    {
         $this->secure = isset($_GET['secure']) ? $_GET['secure'] : $_SESSION['secure'];
         $this->token = isset($_GET['token']) ? $_GET['token'] : $_SESSION['token'];
         $this->app = isset($_GET['app']) ? $_GET['app'] : $_SESSION['app'];
+    }
 
+    public function StartSession($redirect = true)
+    {
         if ($this->secure != null && $this->app != null && $this->token != null) {
             $json = $this->Login($this->app, $this->secure);
 
@@ -77,7 +75,7 @@ class Client
             $_SESSION['secure'] = $this->secure;
             $_SESSION['app'] = $this->app;
 
-            if ($refresh) {
+            if ($redirect) {
                 header('Location: ' . $this->redirect);
             }
         }
