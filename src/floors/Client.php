@@ -6,12 +6,13 @@
  *
  * Copyright (c) 2016, Didit Velliz
  *
- * @package	anywrapper
- * @author	Didit Velliz
- * @link	https://github.com/velliz/floors
- * @since	Version 0.0.1
+ * @package    anywrapper
+ * @author    Didit Velliz
+ * @link    https://github.com/velliz/floors
+ * @since    Version 0.0.1
  *
  */
+
 namespace wrapper\floors;
 
 use \GuzzleHttp\Client as Guzzle;
@@ -60,9 +61,13 @@ class Client
 
         $this->redirect = $redirect;
 
-        $this->secure = isset($_GET['secure']) ? $_GET['secure'] : $_SESSION['secure'];
-        $this->token = isset($_GET['token']) ? $_GET['token'] : $_SESSION['token'];
-        $this->app = isset($_GET['app']) ? $_GET['app'] : $_SESSION['app'];
+        $session_secure = isset($_SESSION['secure']) ? $_SESSION['secure'] : null;
+        $session_token = isset($_SESSION['token']) ? $_SESSION['token'] : null;
+        $session_app = isset($_SESSION['app']) ? $_SESSION['app'] : null;
+
+        $this->secure = isset($_GET['secure']) ? $_GET['secure'] : $session_secure;
+        $this->token = isset($_GET['token']) ? $_GET['token'] : $session_token;
+        $this->app = isset($_GET['app']) ? $_GET['app'] : $session_app;
     }
 
     public function StartSession($redirect = true)
