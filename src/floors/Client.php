@@ -36,6 +36,8 @@ class Client
     private $app = null;
     #end region floors tokenize
 
+    private $id = 0;
+
     /**
      * Client constructor.
      *
@@ -120,10 +122,9 @@ class Client
 
     public function GetProfilePictureURL($size = null)
     {
-        $user = $_SESSION[$this->identifier];
-        $profile_string = $this->server . "api/avatar/%s/%s";
+        $profile_string = $this->server . "avatar/%s/%s";
         $size = ($size == null) ? "400" : (string)$size;
-        return sprintf($profile_string, $user['id'], $size);
+        return sprintf($profile_string, $this->id, $size);
     }
 
     public function IsHasPermission($permission)
@@ -156,7 +157,7 @@ class Client
         ]);
 
         $body = $response->getBody()->getContents();
-        $data = (array) json_decode($body);
+        $data = json_decode($body, true);
         return $data;
     }
 
@@ -188,8 +189,8 @@ class Client
         ]);
 
         $body = $response->getBody()->getContents();
-        $data = json_decode($body);
-        return (array) $data;
+        $data = json_decode($body, true);
+        return $data;
     }
 
     public function GetLinkedAccountUsage()
@@ -201,8 +202,8 @@ class Client
         ]);
 
         $body = $response->getBody()->getContents();
-        $data = json_decode($body);
-        return (array) $data;
+        $data = json_decode($body, true);
+        return $data;
     }
 
     public function GetUserData()
@@ -214,8 +215,9 @@ class Client
         ]);
 
         $body = $response->getBody()->getContents();
-        $data = json_decode($body);
-        return (array) $data;
+        $data = json_decode($body, true);
+        $this->id = $data['data']['user']['id'];
+        return $data;
     }
 
     public function GetSessionID()
