@@ -156,7 +156,7 @@ class Client
         ]);
 
         $body = $response->getBody()->getContents();
-        $data = json_decode($body);
+        $data = (array) json_decode($body);
         return $data;
     }
 
@@ -189,7 +189,7 @@ class Client
 
         $body = $response->getBody()->getContents();
         $data = json_decode($body);
-        return $data;
+        return (array) $data;
     }
 
     public function GetLinkedAccountUsage()
@@ -202,7 +202,7 @@ class Client
 
         $body = $response->getBody()->getContents();
         $data = json_decode($body);
-        return $data;
+        return (array) $data;
     }
 
     public function GetUserData()
@@ -215,7 +215,7 @@ class Client
 
         $body = $response->getBody()->getContents();
         $data = json_decode($body);
-        return $data;
+        return (array) $data;
     }
 
     public function GetSessionID()
@@ -231,6 +231,22 @@ class Client
     public function GetSessionEmail()
     {
         return $_SESSION[$this->identifier]['email'];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServer()
+    {
+        return $this->server;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirect()
+    {
+        return $this->redirect;
     }
 
 }
