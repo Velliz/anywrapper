@@ -9,7 +9,7 @@
  * @package    anywrapper
  * @author    Didit Velliz
  * @link    https://github.com/velliz/floors
- * @since    Version 0.0.1
+ * @since    Version 0.1.1
  *
  */
 
@@ -28,6 +28,7 @@ class Client
 
     private $identifier;
     private $server;
+    private $api_server;
     private $redirect;
 
     #region floors tokenize
@@ -37,6 +38,8 @@ class Client
     #end region floors tokenize
 
     private $id = 0;
+    private $key = '123456789';
+    private $method = 'AES-256-CBC';
 
     /**
      * Client constructor.
@@ -51,36 +54,52 @@ class Client
      */
     public function __construct($server, $redirect)
     {
-        session_start();
-
         $this->identifier = $server['identifier'];
         $this->server = $server['server'];
+        $this->api_server = $server['server'] . '/api';
 
         $this->guzzle = new Guzzle([
-            'base_uri' => $this->server,
+            'base_uri' => $this->api_server,
             'timeout' => 2.0,
         ]);
 
         $this->redirect = $redirect;
 
-        $session_secure = isset($_SESSION['secure']) ? $_SESSION['secure'] : null;
-        $session_token = isset($_SESSION['token']) ? $_SESSION['token'] : null;
-        $session_app = isset($_SESSION['app']) ? $_SESSION['app'] : null;
+        if (isset($_GET['secure'])) {
+            $this->secure = $_GET['secure'];
+        } else {
+            $this->secure = $this->GetSession('f_secure');
+        }
 
-        $this->secure = isset($_GET['secure']) ? $_GET['secure'] : $session_secure;
-        $this->token = isset($_GET['token']) ? $_GET['token'] : $session_token;
-        $this->app = isset($_GET['app']) ? $_GET['app'] : $session_app;
+        if (isset($_GET['token'])) {
+            $this->token = $_GET['token'];
+        } else {
+            $this->token = $this->GetSession('f_token');
+        }
+
+        if (isset($_GET['app'])) {
+            $this->app = $_GET['app'];
+        } else {
+            $this->app = $this->GetSession('f_app');
+        }
+
+        if ($this->token === null) {
+            header('Location: ' . $this->server);
+        }
+        if ($this->token === '') {
+            header('Location: ' . $this->server);
+        }
     }
 
-    public function StartSession($redirect = true)
+    public function StartSession($redirect = true, $expired = 0)
     {
         if ($this->secure != null && $this->app != null && $this->token != null) {
             $json = $this->Login($this->app, $this->secure);
 
-            $_SESSION[$this->identifier] = (array)json_decode($json);
-            $_SESSION['token'] = $this->token;
-            $_SESSION['secure'] = $this->secure;
-            $_SESSION['app'] = $this->app;
+            $this->PutSession($this->identifier, (array)json_decode($json), $expired);
+            $this->PutSession('f_token', $this->token, $expired);
+            $this->PutSession('f_secure', $this->secure, $expired);
+            $this->PutSession('f_app', $this->app, $expired);
 
             if ($redirect) {
                 header('Location: ' . $this->redirect);
@@ -90,26 +109,29 @@ class Client
 
     public function GetSessionData()
     {
-        return $_SESSION[$this->identifier];
+        return $this->GetSession($this->identifier);
     }
 
     public function GetTokenData()
     {
-        return $_SESSION['token'];
+        return $this->GetSession('f_token');
     }
 
     public function IsLogin()
     {
-        if (isset($_SESSION[$this->identifier])) {
+        if ($this->GetSession($this->identifier) !== false) {
             return true;
         } else {
             return false;
         }
     }
 
-    public function Logout()
+    public function Logout($expired)
     {
-        unset($_SESSION[$this->identifier]);
+        $this->RemoveSession($this->identifier, $expired);
+        $this->RemoveSession('f_token', $expired);
+        $this->RemoveSession('f_secure', $expired);
+        $this->RemoveSession('f_app', $expired);
     }
 
     private function Login($a, $t)
@@ -122,7 +144,7 @@ class Client
 
     public function GetProfilePictureURL($size = null)
     {
-        $profile_string = $this->server . "avatar/%s/%s";
+        $profile_string = $this->api_server . "avatar/%s/%s";
         $size = ($size == null) ? "400" : (string)$size;
         return sprintf($profile_string, $this->id, $size);
     }
@@ -222,17 +244,17 @@ class Client
 
     public function GetSessionID()
     {
-        return $_SESSION[$this->identifier]['id'];
+        return $this->GetSession($this->identifier)['id'];
     }
 
     public function GetSessionName()
     {
-        return $_SESSION[$this->identifier]['name'];
+        return $this->GetSession($this->identifier)['name'];
     }
 
     public function GetSessionEmail()
     {
-        return $_SESSION[$this->identifier]['email'];
+        return $this->GetSession($this->identifier)['email'];
     }
 
     /**
@@ -250,5 +272,41 @@ class Client
     {
         return $this->redirect;
     }
+
+    public function PutSession($key, $val, $expired = 0)
+    {
+        setcookie($key, $this->Encrypt($val), (time() + $expired), "/");
+        $_COOKIE[$key] = $this->Encrypt($val);
+    }
+
+    public function GetSession($val)
+    {
+        if (!isset($_COOKIE[$val])) {
+            return false;
+        }
+        return $this->Decrypt($_COOKIE[$val]);
+    }
+
+    public function RemoveSession($key, $expired)
+    {
+        setcookie($key, '', (time() - $expired), '/');
+        $_COOKIE[$key] = '';
+    }
+
+    private function Encrypt($string)
+    {
+        $key = hash('sha256', $this->key);
+        $iv = substr(hash('sha256', $this->identifier), 0, 16);
+        $output = openssl_encrypt($string, $this->method, $key, 0, $iv);
+        return base64_encode($output);
+    }
+
+    private function Decrypt($string)
+    {
+        $key = hash('sha256', $this->key);
+        $iv = substr(hash('sha256', $this->identifier), 0, 16);
+        return openssl_decrypt(base64_decode($string), $this->method, $key, 0, $iv);
+    }
+
 
 }
