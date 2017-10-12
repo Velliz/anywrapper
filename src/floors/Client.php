@@ -30,6 +30,7 @@ class Client
     private $server;
     private $api_server;
     private $redirect;
+    private $login;
 
     #region floors tokenize
     private $token = null;
@@ -56,7 +57,8 @@ class Client
     {
         $this->identifier = $server['identifier'];
         $this->server = $server['server'];
-        $this->api_server = $server['server'] . '/api';
+        $this->api_server = $server['server'] . '/api/';
+        $this->login = $server['server'] . '/resume';
 
         $this->guzzle = new Guzzle([
             'base_uri' => $this->api_server,
@@ -96,7 +98,7 @@ class Client
         if ($this->secure != null && $this->app != null && $this->token != null) {
             $json = $this->Login($this->app, $this->secure);
 
-            $this->PutSession($this->identifier, (array)json_decode($json), $expired);
+            $this->PutSession($this->identifier, $json, $expired);
             $this->PutSession('f_token', $this->token, $expired);
             $this->PutSession('f_secure', $this->secure, $expired);
             $this->PutSession('f_app', $this->app, $expired);
@@ -109,7 +111,7 @@ class Client
 
     public function GetSessionData()
     {
-        return $this->GetSession($this->identifier);
+        return json_decode($this->GetSession($this->identifier), true);
     }
 
     public function GetTokenData()
@@ -244,17 +246,22 @@ class Client
 
     public function GetSessionID()
     {
-        return $this->GetSession($this->identifier)['id'];
+        return json_decode($this->GetSession($this->identifier), true)['id'];
     }
 
     public function GetSessionName()
     {
-        return $this->GetSession($this->identifier)['name'];
+        return json_decode($this->GetSession($this->identifier), true)['name'];
     }
 
     public function GetSessionEmail()
     {
-        return $this->GetSession($this->identifier)['email'];
+        return json_decode($this->GetSession($this->identifier), true)['email'];
+    }
+
+    public function GetLoginUrl()
+    {
+        return $this->login;
     }
 
     /**
