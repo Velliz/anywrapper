@@ -51,9 +51,10 @@ class Pdf extends Wrapper
 
     /**
      * @param $apiUrl
-     * @return mixed|void
+     * @param bool $do_die
+     * @return void
      */
-    public function Send($apiUrl)
+    public function Send($apiUrl, $do_die = true)
     {
         $this->apiUrl = $apiUrl;
         if(count($this->attachmentData) > 0) {
@@ -62,20 +63,27 @@ class Pdf extends Wrapper
         $post['jsondata'] = json_encode($this->jsonData);
 
         if ($this->requestType == Wrapper::POST) {
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
-            curl_setopt($curl, CURLOPT_POST, TRUE);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-            curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
-            $response = curl_exec($curl);
-            curl_close($curl);
 
             header("Cache-Control: no-cache");
             header("Pragma: no-cache");
             header("Author: Anywhere 0.1");
             header('Content-Type: application/pdf');
 
+            ob_start();
+
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+            curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
+            $response = curl_exec($curl);
+            curl_close($curl);
+
             echo $response;
+
+            if ($do_die) {
+                die();
+            }
         }
     }
 }
