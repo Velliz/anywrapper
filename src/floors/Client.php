@@ -98,6 +98,7 @@ class Client
         if ($this->secure != null && $this->app != null && $this->token != null) {
             $json = $this->Login($this->app, $this->secure);
 
+            //todo: eliminate f_token, f_app, f_secure
             $this->PutSession($this->identifier, $json, $expired);
             $this->PutSession('f_token', $this->token, $expired);
             $this->PutSession('f_secure', $this->secure, $expired);
@@ -107,6 +108,15 @@ class Client
                 header('Location: ' . $this->redirect);
             }
         }
+    }
+
+    public function GetUserLists($app_code, $permission_code)
+    {
+        $response = $this->guzzle->request('GET', sprintf('list/users/%s/%s', $app_code, $permission_code));
+
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body, true);
+        return $data;
     }
 
     public function GetSessionData()
@@ -130,6 +140,7 @@ class Client
 
     public function Logout($expired)
     {
+        //todo: eliminate f_token, f_app, f_secure
         $this->RemoveSession($this->identifier, $expired);
         $this->RemoveSession('f_token', $expired);
         $this->RemoveSession('f_secure', $expired);
