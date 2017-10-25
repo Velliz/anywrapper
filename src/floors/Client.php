@@ -110,9 +110,9 @@ class Client
         }
     }
 
-    public function GetUserLists($app_code, $permission_code)
+    public function GetUserLists($permission_code)
     {
-        $response = $this->guzzle->request('GET', sprintf('list/users/%s/%s', $app_code, $permission_code));
+        $response = $this->guzzle->request('GET', sprintf('list/users/%s/%s', $this->app, $permission_code));
 
         $body = $response->getBody()->getContents();
         $data = json_decode($body, true);
