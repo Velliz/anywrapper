@@ -62,7 +62,7 @@ class Client
 
         $this->guzzle = new Guzzle([
             'base_uri' => $this->api_server,
-            'timeout' => 2.0,
+            'timeout' => 8.0,
         ]);
 
         $this->redirect = $redirect;
