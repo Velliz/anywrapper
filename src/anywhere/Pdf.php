@@ -40,7 +40,7 @@ class Pdf extends Wrapper
         if ($key == null)
             throw new Exception('Key not set.');
         if ($value == null)
-            throw new Exception('Value not set.');
+            return;
         $this->jsonData[$key] = $value;
     }
 
