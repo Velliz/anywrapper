@@ -124,9 +124,10 @@ class Mail extends Wrapper
 
     /**
      * @param $apiUrl
+     * @param bool $do_die
      * @return mixed
      */
-    public function Send($apiUrl)
+    public function Send($apiUrl, $do_die = true)
     {
         $this->apiUrl = $apiUrl;
         if(count($this->attachmentData) > 0) {
@@ -135,6 +136,12 @@ class Mail extends Wrapper
         $post['jsondata'] = json_encode($this->jsonData);
 
         if ($this->requestType == Wrapper::POST) {
+
+            header("Cache-Control: no-cache");
+            header("Pragma: no-cache");
+            header("Author: Anywhere 0.1");
+            header('Content-Type: application/json');
+
             ob_start();
 
             $curl = curl_init();
@@ -145,7 +152,11 @@ class Mail extends Wrapper
             $response = curl_exec($curl);
             curl_close($curl);
 
-            return $response;
+            echo $response;
+
+            if ($do_die) {
+                die();
+            }
         }
         return null;
     }

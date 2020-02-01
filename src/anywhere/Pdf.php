@@ -85,5 +85,6 @@ class Pdf extends Wrapper
                 die();
             }
         }
+        return null;
     }
 }
