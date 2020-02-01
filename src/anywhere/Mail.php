@@ -135,22 +135,17 @@ class Mail extends Wrapper
         $post['jsondata'] = json_encode($this->jsonData);
 
         if ($this->requestType == Wrapper::POST) {
+            ob_start();
+
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
-            curl_setopt($curl, CURLOPT_POST, TRUE);
+            curl_setopt($curl, CURLOPT_POST, true);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
             curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
-            curl_setopt($curl, CURLOPT_TIMEOUT, 1);
-            curl_setopt($curl, CURLOPT_HEADER, 0);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_FORBID_REUSE, true);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
-            curl_setopt($curl, CURLOPT_DNS_CACHE_TIMEOUT, 10);
-            curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
-            $content = curl_exec($curl);
+            $response = curl_exec($curl);
             curl_close($curl);
 
-            return $content;
+            return $response;
         }
         return null;
     }
