@@ -35,6 +35,7 @@ abstract class Wrapper
     var $requestUrl;
 
     var $jsonData = array();
+    var $creatorInfo = array();
     var $attachmentData = array();
 
     var $apiUrl;

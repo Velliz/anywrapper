@@ -6,12 +6,13 @@
  *
  * Copyright (c) 2016, Didit Velliz
  *
- * @package	anywrapper
- * @author	Didit Velliz
- * @link	https://github.com/velliz/pukoframework
- * @since	Version 0.0.1
+ * @package    anywrapper
+ * @author    Didit Velliz
+ * @link    https://github.com/velliz/pukoframework
+ * @since    Version 0.0.1
  *
  */
+
 namespace wrapper\anywhere;
 
 use Exception;
@@ -44,6 +45,18 @@ class Pdf extends Wrapper
         $this->jsonData[$key] = $value;
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @throws Exception
+     */
+    public function setCreator($value)
+    {
+        if ($value == null)
+            return;
+        $this->creatorInfo = $value;
+    }
+
     protected function Init()
     {
         $this->mode = Wrapper::PDF;
@@ -57,10 +70,11 @@ class Pdf extends Wrapper
     public function Send($apiUrl, $do_die = true)
     {
         $this->apiUrl = $apiUrl;
-        if(count($this->attachmentData) > 0) {
+        if (count($this->attachmentData) > 0) {
             $this->jsonData['attachment'] = $this->attachmentData;
         }
         $post['jsondata'] = json_encode($this->jsonData);
+        $post['creator'] = json_encode($this->creatorInfo);
 
         if ($this->requestType == Wrapper::POST) {
 
