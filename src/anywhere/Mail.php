@@ -150,13 +150,15 @@ class Mail extends Wrapper
             curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
             curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
             $response = curl_exec($curl);
+
+            ob_get_clean();
             curl_close($curl);
 
-            echo $response;
-
             if ($do_die) {
+                echo $response;
                 die();
             }
+            return $response;
         }
         return null;
     }
