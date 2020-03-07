@@ -1,23 +1,28 @@
-# anywrapper [beta]
+# anywrapper
 
-PHP based client for **Anywhere** and **Floors**.
+PHP based client for **Anywhere**
 
 [![Latest Stable Version](https://poser.pugx.org/anywhere/wrapper/v/stable)](https://packagist.org/packages/anywhere/wrapper)
 [![Total Downloads](https://poser.pugx.org/anywhere/wrapper/downloads)](https://packagist.org/packages/anywhere/wrapper)
 
-Add library to your composer.json
+Add this library by executing composer command: `composer require anywhere/wrapper` or add this library to your composer.json
+
 ```
 "require": {
-    "anywhere/wrapper": "dev-master"
+    "anywhere/wrapper": "0.2.0"
 }
 ```
 
-## Anywhere Usage
+> since version 0.2.0 floors support was dropped to maintain library size and relevance
 
-### PDF requests sample
-always choose POST for your request URL.
+## Anywrapper Usage
+
+**PDF requests sample**
+
+Always choose **POST** for your request URL. Because GET works without use of this library.
+
 ```php
-$pdf = new AnywherePdf(Wrapper::POST);
+$pdf = new wrapper\anywhere\Pdf(Wrapper::POST);
 
 $pdf->setValue('Name', 'Someone');
 $pdf->setValue('Age', '22');
@@ -25,8 +30,10 @@ $pdf->setValue('Age', '22');
 $pdf->Send(API_URL, false);
 ```
 
-### Email requests sample
-always choose POST for your request URL.
+**Email requests sample**
+
+Always choose POST for your request URL.
+
 ```php
 $mail = new AnywhereMail(Wrapper::POST);
 
@@ -46,34 +53,12 @@ $mail->setAttachment('qrcode1.png', 'https://anywhere.cf/qr/render?data=develope
 $mail->Send(API_URL, false);
 ```
 
-### Images request sample
+**Images request sample**
+
 > TODO
 
-## Floors Usage
+---
 
-### Initialize
-```php
-use \wrapper\floors\Client as FloorsWrapper;
+_Extras_
 
-$config = array(
-    'server' => 'http://localhost/floors/api/',
-    'identifier' => 'anywrapper'
-);
-$redirect = 'http://localhost/anywrapper';
-
-$client = new FloorsWrapper($config, $redirect);
-$client->StartSession(false);
-```
-
-### Available Method
-```php
-$confirm = $client->ConfirmPassword('test', 'test');
-$permission = $client->IsHasPermission('USER');
-$permission_all = $client->GetPermission();
-$profile = $client->GetLoginInformation();
-$profile_pic = $client->GetProfilePictureURL();
-$user = $client->GetUserData();
-```
-
-### Extras
 made with <3 from bandung, indonesia.
