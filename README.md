@@ -22,7 +22,7 @@ $pdf = new AnywherePdf(Wrapper::POST);
 $pdf->setValue('Name', 'Someone');
 $pdf->setValue('Age', '22');
 
-$pdf->Send(API_URL);
+$pdf->Send(API_URL, false);
 ```
 
 ### Email requests sample
@@ -43,7 +43,7 @@ $mail->setValue('Age', '22');
 $mail->setAttachment('qrcode.png', 'https://anywhere.cf/qr/render?data=admin@example.co.id');
 $mail->setAttachment('qrcode1.png', 'https://anywhere.cf/qr/render?data=developer@example.co.id');
 
-$mail->Send(API_URL);
+$mail->Send(API_URL, false);
 ```
 
 ### Images request sample

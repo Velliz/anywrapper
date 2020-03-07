@@ -20,11 +20,16 @@ namespace wrapper\anywhere;
  */
 class Image extends Wrapper
 {
+
     protected function Init()
     {
         $this->mode = Wrapper::IMAGES;
     }
 
+    /**
+     * @param $apiUrl
+     * @return mixed|void
+     */
     public function Send($apiUrl)
     {
         $this->apiUrl = $apiUrl;

@@ -13,9 +13,6 @@
   "require": {
     "guzzlehttp/guzzle": "6.2.3"
   },
-  "require-dev": {
-    "guzzlehttp/guzzle": "6.2.3"
-  },
   "minimum-stability": "dev",
   "autoload": {
     "psr-4": {

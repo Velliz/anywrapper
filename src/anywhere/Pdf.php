@@ -24,6 +24,11 @@ use Exception;
 class Pdf extends Wrapper
 {
 
+    /**
+     * Pdf constructor.
+     * @param $requestType
+     * @param null $requestUrl
+     */
     public function __construct($requestType, $requestUrl = null)
     {
         parent::__construct();
@@ -38,22 +43,23 @@ class Pdf extends Wrapper
      */
     public function setValue($key, $value)
     {
-        if ($key == null)
+        if ($key == null) {
             throw new Exception('Key not set.');
-        if ($value == null)
+        }
+        if ($value == null) {
             return;
+        }
         $this->jsonData[$key] = $value;
     }
 
     /**
-     * @param $key
      * @param $value
-     * @throws Exception
      */
     public function setCreator($value)
     {
-        if ($value == null)
+        if ($value == null) {
             return;
+        }
         $this->creatorInfo = $value;
     }
 

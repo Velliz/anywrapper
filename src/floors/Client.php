@@ -16,6 +16,7 @@
 namespace wrapper\floors;
 
 use \GuzzleHttp\Client as Guzzle;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Class Client
@@ -93,6 +94,10 @@ class Client
         }
     }
 
+    /**
+     * @param bool $redirect
+     * @param int $expired
+     */
     public function StartSession($redirect = true, $expired = 0)
     {
         if ($this->secure != null && $this->app != null && $this->token != null) {
@@ -110,6 +115,11 @@ class Client
         }
     }
 
+    /**
+     * @param $permission_code
+     * @return mixed
+     * @throws GuzzleException
+     */
     public function GetUserLists($permission_code)
     {
         $response = $this->guzzle->request('GET', sprintf('list/users/%s/%s', $this->app, $permission_code));
@@ -119,16 +129,25 @@ class Client
         return $data;
     }
 
+    /**
+     * @return mixed
+     */
     public function GetSessionData()
     {
         return json_decode($this->GetSession($this->identifier), true);
     }
 
+    /**
+     * @return bool|string
+     */
     public function GetTokenData()
     {
         return $this->GetSession('f_token');
     }
 
+    /**
+     * @return bool
+     */
     public function IsLogin()
     {
         if ($this->GetSession($this->identifier) !== false) {
@@ -138,6 +157,9 @@ class Client
         }
     }
 
+    /**
+     * @param $expired
+     */
     public function Logout($expired)
     {
         //todo: eliminate f_token, f_app, f_secure
@@ -147,6 +169,11 @@ class Client
         $this->RemoveSession('f_app', $expired);
     }
 
+    /**
+     * @param $a
+     * @param $t
+     * @return string
+     */
     private function Login($a, $t)
     {
         $key = hash('sha256', $a);
@@ -155,6 +182,10 @@ class Client
         return $json;
     }
 
+    /**
+     * @param null $size
+     * @return string
+     */
     public function GetProfilePictureURL($size = null)
     {
         $profile_string = $this->api_server . "avatar/%s/%s";
@@ -162,6 +193,11 @@ class Client
         return sprintf($profile_string, $this->id, $size);
     }
 
+    /**
+     * @param $permission
+     * @return bool
+     * @throws GuzzleException
+     */
     public function IsHasPermission($permission)
     {
         $response = $this->guzzle->request('POST', 'authorized', [
@@ -182,6 +218,10 @@ class Client
         return false;
     }
 
+    /**
+     * @return mixed
+     * @throws GuzzleException
+     */
     public function GetPermission()
     {
         $response = $this->guzzle->request('POST', 'authorized', [
@@ -196,6 +236,12 @@ class Client
         return $data;
     }
 
+    /**
+     * @param $password
+     * @param $confirm
+     * @return bool
+     * @throws GuzzleException
+     */
     public function ConfirmPassword($password, $confirm)
     {
         $response = $this->guzzle->request('POST', 'confirm/password', [
@@ -215,6 +261,10 @@ class Client
         return false;
     }
 
+    /**
+     * @return mixed
+     * @throws GuzzleException
+     */
     public function GetLoginInformation()
     {
         $response = $this->guzzle->request('POST', 'login/info', [
@@ -228,6 +278,10 @@ class Client
         return $data;
     }
 
+    /**
+     * @return mixed
+     * @throws GuzzleException
+     */
     public function GetLinkedAccountUsage()
     {
         $response = $this->guzzle->request('POST', 'credential/info', [
@@ -241,6 +295,10 @@ class Client
         return $data;
     }
 
+    /**
+     * @return mixed
+     * @throws GuzzleException
+     */
     public function GetUserData()
     {
         $response = $this->guzzle->request('POST', 'user', [
@@ -255,16 +313,25 @@ class Client
         return $data;
     }
 
+    /**
+     * @return mixed
+     */
     public function GetSessionID()
     {
         return json_decode($this->GetSession($this->identifier), true)['id'];
     }
 
+    /**
+     * @return mixed
+     */
     public function GetSessionName()
     {
         return json_decode($this->GetSession($this->identifier), true)['name'];
     }
 
+    /**
+     * @return mixed
+     */
     public function GetSessionEmail()
     {
         return json_decode($this->GetSession($this->identifier), true)['email'];
@@ -305,12 +372,20 @@ class Client
         return $this->Decrypt($_COOKIE[$val]);
     }
 
+    /**
+     * @param $key
+     * @param $expired
+     */
     public function RemoveSession($key, $expired)
     {
         setcookie($key, '', (time() - $expired), '/');
         $_COOKIE[$key] = '';
     }
 
+    /**
+     * @param $string
+     * @return string
+     */
     private function Encrypt($string)
     {
         $key = hash('sha256', $this->key);
@@ -319,12 +394,15 @@ class Client
         return base64_encode($output);
     }
 
+    /**
+     * @param $string
+     * @return string
+     */
     private function Decrypt($string)
     {
         $key = hash('sha256', $this->key);
         $iv = substr(hash('sha256', $this->identifier), 0, 16);
         return openssl_decrypt(base64_decode($string), $this->method, $key, 0, $iv);
     }
-
 
 }

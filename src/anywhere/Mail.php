@@ -23,6 +23,11 @@ use Exception;
 class Mail extends Wrapper
 {
 
+    /**
+     * Mail constructor.
+     * @param $requestType
+     * @param null $requestUrl
+     */
     public function __construct($requestType, $requestUrl = null)
     {
         parent::__construct();
