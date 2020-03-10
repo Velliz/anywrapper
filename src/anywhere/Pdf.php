@@ -84,11 +84,6 @@ class Pdf extends Wrapper
 
         if ($this->requestType == Wrapper::POST) {
 
-            header("Cache-Control: no-cache");
-            header("Pragma: no-cache");
-            header("Author: Anywhere 0.1");
-            header('Content-Type: application/pdf');
-
             ob_start();
 
             $curl = curl_init();
@@ -98,13 +93,20 @@ class Pdf extends Wrapper
             curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
             $response = curl_exec($curl);
 
-            ob_get_clean();
             curl_close($curl);
 
             if ($do_die) {
+                header("Cache-Control: no-cache");
+                header("Pragma: no-cache");
+                header("Author: Anywhere 0.1");
+                header('Content-Type: application/pdf');
+
                 echo $response;
                 die();
             }
+
+            ob_get_clean();
+
             return $response;
         }
         return null;

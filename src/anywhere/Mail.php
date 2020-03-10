@@ -142,11 +142,6 @@ class Mail extends Wrapper
 
         if ($this->requestType == Wrapper::POST) {
 
-            header("Cache-Control: no-cache");
-            header("Pragma: no-cache");
-            header("Author: Anywhere 0.1");
-            header('Content-Type: application/json');
-
             ob_start();
 
             $curl = curl_init();
@@ -156,13 +151,20 @@ class Mail extends Wrapper
             curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
             $response = curl_exec($curl);
 
-            ob_get_clean();
             curl_close($curl);
 
             if ($do_die) {
+                header("Cache-Control: no-cache");
+                header("Pragma: no-cache");
+                header("Author: Anywhere 0.1");
+                header('Content-Type: application/json');
+
                 echo $response;
                 die();
             }
+
+            ob_get_clean();
+
             return $response;
         }
         return null;
