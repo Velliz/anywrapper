@@ -37,6 +37,7 @@ abstract class Wrapper
     var $jsonData = array();
     var $creatorInfo = array();
     var $attachmentData = array();
+    var $digitalSign = array();
 
     var $apiUrl;
 

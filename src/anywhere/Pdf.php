@@ -53,6 +53,22 @@ class Pdf extends Wrapper
     }
 
     /**
+     * @param $email
+     * @param $docName
+     * @param $location
+     * @param $reason
+     */
+    public function setDigitalSigning($email, $docName, $location, $reason)
+    {
+        $this->digitalSign[$email] = [
+            'email' => $email,
+            'docName' => $docName,
+            'location' => $location,
+            'reason' => $reason,
+        ];
+    }
+
+    /**
      * @param $value
      */
     public function setCreator($value)
@@ -81,6 +97,7 @@ class Pdf extends Wrapper
         }
         $post['jsondata'] = json_encode($this->jsonData);
         $post['creator'] = json_encode($this->creatorInfo);
+        $post['digitalsign'] = json_encode($this->digitalSign);
 
         if ($this->requestType == Wrapper::POST) {
 
