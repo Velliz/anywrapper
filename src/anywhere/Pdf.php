@@ -54,14 +54,16 @@ class Pdf extends Wrapper
 
     /**
      * @param $identifier
+     * @param $apikey
      * @param $email
      * @param $docName
      * @param $location
      * @param $reason
      */
-    public function setDigitalSigning($identifier, $email, $docName, $location, $reason)
+    public function setDigitalSigning($identifier, $apikey, $email, $docName, $location, $reason)
     {
         $this->digitalSign[$identifier] = [
+            'apikey' => $apikey,
             'email' => $email,
             'docName' => $docName,
             'location' => $location,
