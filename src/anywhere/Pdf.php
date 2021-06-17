@@ -90,7 +90,7 @@ class Pdf extends Wrapper
     /**
      * @param $apiUrl
      * @param bool $do_die
-     * @return void
+     * @return bool|string
      */
     public function Send($apiUrl, $do_die = true)
     {
@@ -102,33 +102,28 @@ class Pdf extends Wrapper
         $post['creator'] = json_encode($this->creatorInfo);
         $post['digitalsign'] = json_encode($this->digitalSign);
 
-        if ($this->requestType == Wrapper::POST) {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
 
+        if ($do_die) {
             ob_start();
-
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-            curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
             $response = curl_exec($curl);
-
             curl_close($curl);
 
-            if ($do_die) {
-                header("Cache-Control: no-cache");
-                header("Pragma: no-cache");
-                header("Author: Anywhere 0.1");
-                header('Content-Type: application/pdf');
+            header("Cache-Control: no-cache");
+            header("Pragma: no-cache");
+            header("Author: Anywhere 0.1");
+            header('Content-Type: application/pdf');
 
-                echo $response;
-                die();
-            }
-
-            ob_get_clean();
-
-            return $response;
+            echo $response;
+            die();
+        } else {
+            $response = curl_exec($curl);
         }
-        return null;
+
+        return $response;
     }
 }
