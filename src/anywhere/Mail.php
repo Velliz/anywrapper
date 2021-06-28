@@ -154,7 +154,7 @@ class Mail extends Wrapper
             header("Cache-Control: no-cache");
             header("Pragma: no-cache");
             header("Author: Anywhere 0.1");
-            header('Content-Type: application/pdf');
+            header('Content-Type: application/json');
 
             echo $response;
             die();
