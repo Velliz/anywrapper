@@ -140,33 +140,29 @@ class Mail extends Wrapper
         }
         $post['jsondata'] = json_encode($this->jsonData);
 
-        if ($this->requestType == Wrapper::POST) {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
 
+        if ($do_die) {
             ob_start();
-
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-            curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
             $response = curl_exec($curl);
-
             curl_close($curl);
 
-            if ($do_die) {
-                header("Cache-Control: no-cache");
-                header("Pragma: no-cache");
-                header("Author: Anywhere 0.1");
-                header('Content-Type: application/json');
+            header("Cache-Control: no-cache");
+            header("Pragma: no-cache");
+            header("Author: Anywhere 0.1");
+            header('Content-Type: application/pdf');
 
-                echo $response;
-                die();
-            }
-
-            ob_get_clean();
-
-            return $response;
+            echo $response;
+            die();
         }
-        return null;
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return $response;
     }
 }
