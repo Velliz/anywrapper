@@ -55,7 +55,12 @@ $mail->Send(API_URL, false);
 
 **Images request sample**
 
-> TODO
+```php
+$images = new \wrapper\anywhere\Image();
+$images->setImageContentUrl('http://anywhere.test/qr/render?data=05b810384abc26a2365e1108501534a2&size=300&label=Anywhere');
+
+$images->Send("http://anywhere.test/images/render/4f1bf2f1a5546d2d567043d14f1a14ae/1");
+```
 
 ---
 
