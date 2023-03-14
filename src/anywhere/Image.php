@@ -12,6 +12,7 @@
  * @since    Version 0.0.1
  *
  */
+
 namespace wrapper\anywhere;
 
 /**
@@ -26,33 +27,37 @@ class Image extends Wrapper
         $this->mode = Wrapper::IMAGES;
     }
 
+    public function setImageContentUrl($imgUrl)
+    {
+        $this->jsonData['url'] = $imgUrl;
+    }
+
     /**
      * @param $apiUrl
-     * @return mixed|void
+     * @return void
      */
     public function Send($apiUrl)
     {
         $this->apiUrl = $apiUrl;
-        if(count($this->attachmentData) > 0) {
-            $this->jsonData['attachment'] = $this->attachmentData;
-        }
         $post['jsondata'] = json_encode($this->jsonData);
 
-        if ($this->requestType == Wrapper::URL) {
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
-            curl_setopt($curl, CURLOPT_POST, TRUE);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-            curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
-            $response = curl_exec($curl);
-            curl_close($curl);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $this->apiUrl);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Anywhere Wrapper');
 
-            header("Cache-Control: no-cache");
-            header("Pragma: no-cache");
-            header("Author: Anywhere 0.1");
-            header('Content-Type: image/png');
+        ob_start();
+        $response = curl_exec($curl);
+        curl_close($curl);
 
-            echo $response;
-        }
+        header("Cache-Control: no-cache");
+        header("Pragma: no-cache");
+        header("Author: Anywhere 0.1");
+        header('Content-Type: image/png');
+
+        echo $response;
+        die();
+
     }
 }
