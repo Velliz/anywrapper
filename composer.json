@@ -10,7 +10,10 @@
       "email": "diditvelliz@outlook.com"
     }
   ],
-  "require": {},
+  "require": {
+    "ext-json": "*",
+    "ext-curl": "*"
+  },
   "minimum-stability": "dev",
   "autoload": {
     "psr-4": {
